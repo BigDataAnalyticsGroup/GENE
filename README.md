@@ -1,2 +1,2 @@
 # GENE
-Code use for VLDB paper "The next 50 Years in Database Indexing or: The Case for Automatically Generated Index Structures"
+Code use for VLDB paper ["The next 50 Years in Database Indexing or: The Case for Automatically Generated Index Structures"](https://arxiv.org/abs/2009.10669) (Pre-print)
