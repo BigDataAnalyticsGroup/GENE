@@ -1,0 +1,9 @@
+add_executable(main main.cpp)
+add_executable(main_grid_search main_genetic_grid_search.cpp)
+add_executable(optimized_vs_heuristic optimized_vs_heuristic.cpp)
+
+add_executable(generate_data experiments/generate_data.cpp)
+add_executable(generate_workload experiments/generate_workload.cpp)
+
+add_executable(btree_baseline experiments/baselines/btree_baseline.cpp)
+add_executable(hashtable_baseline experiments/baselines/hashtable_baseline.cpp)

@@ -1,0 +1,15 @@
+[submodule "third_party/PGM-index"]
+	path = third_party/PGM-index
+	url = https://github.com/gvinciguerra/PGM-index.git
+[submodule "third_party/blog"]
+	path = third_party/blog
+	url = https://github.com/mvorbrodt/blog
+[submodule "third_party/cxxopts"]
+	path = third_party/cxxopts
+	url = https://github.com/jarro2783/cxxopts
+[submodule "third_party/robin-map"]
+	path = third_party/robin-map
+	url = https://github.com/Tessil/robin-map.git
+[submodule "third_party/tlx"]
+	path = third_party/tlx
+	url = https://github.com/tlx/tlx.git
