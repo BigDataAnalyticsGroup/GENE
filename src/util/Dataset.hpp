@@ -109,7 +109,37 @@ struct Dataset
         entries.reserve(n);
 
         auto s = sample(data, n, dataset->random_generator());
-        for (auto e : s) entries.push_back({e, e});
+        for (auto i = 0; i < n; ++i) entries.push_back({s[i], i});
+
+        return dataset;
+    }
+
+    static Dataset * Create_Osm(size_type n, uint64_t seed = 42)
+    {
+        static_assert(std::is_integral<key_type>::value, "Integral type for Key required.");
+        static_assert(std::is_integral<T>::value, "Integral type for T required.");
+
+        /* Check if wiki dataset is locally present. */
+        const std::string filename("data/osm_cellids_200M_uint64");
+        if (not std::filesystem::exists(filename)) {
+            std::cerr << "osm dataset does not exist at '" << filename
+                      << "Execute download script in './data'"
+                      << std::endl;
+            throw FileNotFoundException();
+        }
+
+        /* Load binary data. */
+        auto data = load_data<uint64_t>(filename);
+        key_type min = data.front();
+        key_type max = data.back();
+
+        /* Create Dataset object. */
+        Dataset * dataset = new Dataset(n, {min, max}, Distribution::osm, seed);
+        auto & entries = dataset->entries();
+        entries.reserve(n);
+
+        auto s = sample(data, n, dataset->random_generator());
+        for (auto i = 0; i < n; ++i) entries.push_back({s[i], i});
 
         return dataset;
     }

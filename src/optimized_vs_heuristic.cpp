@@ -40,7 +40,6 @@ struct traits : tlx::btree_default_traits<key_type, mapped_type> {
     static const bool debug = false;
     static const int inner_slots = inner_slot_size;
     static const int leaf_slots = leaf_slot_size;
-    //static const size_t binsearch_threshold = 256;
 };
 
 /*======================================================================================================================
@@ -49,8 +48,6 @@ struct traits : tlx::btree_default_traits<key_type, mapped_type> {
 int main(int argc, char *argv[]) {
     fesetround(FE_DOWNWARD); // required by PGM to produce correct results
 
-
-// TODO: exchange with cxxopts
     /* Argparser */
     cxxopts::Options options("optimized_vs_heuristic", "experiment comparing state-of-the-art indexes to GENE");
 
@@ -152,7 +149,6 @@ int main(int argc, char *argv[]) {
                     throw std::invalid_argument("Unknown Workload_type");
         }
     }
-    std::cout << "Checksum: " << checksum << std::endl;
 
     /* 1) TLX B+Tree. */
     for (auto i = 0; i != NUM_RUNS; ++i) {
@@ -197,7 +193,6 @@ int main(int argc, char *argv[]) {
         auto stop = steady_clock::now();
         auto time = duration_cast<nanoseconds>(stop - start).count();
         /* Validate checksum. */
-        std::cout << "TLX Checksum: " << result << std::endl;
         assert(result == checksum);
         OUTPUT(dataset->size(), toString(dataset->distribution()), "poc", workload->size(), "TLX B-tree", traits::inner_slots, traits::leaf_slots, i, time);
     }
@@ -245,7 +240,6 @@ int main(int argc, char *argv[]) {
         auto stop = steady_clock::now();
         auto time = duration_cast<nanoseconds>(stop - start).count();
         /* Validate checksum. */
-        std::cout << "ART Checksum: " << result << std::endl;
         assert(result == checksum);
         OUTPUT(dataset->size(), toString(dataset->distribution()), "poc", workload->size(), "ART", 0, 0, i, time);
     }
@@ -299,7 +293,6 @@ int main(int argc, char *argv[]) {
         auto stop = steady_clock::now();
         auto time = duration_cast<nanoseconds>(stop - start).count();
         /* Validate checksum. */
-        std::cout << "PGM Checksum: " << result << std::endl;
         assert(result == checksum);
         OUTPUT(dataset->size(), toString(dataset->distribution()), "poc", workload->size(), "PGM", 0, 0, i, time);
     }
@@ -347,7 +340,6 @@ int main(int argc, char *argv[]) {
         auto stop = steady_clock::now();
         auto time = duration_cast<nanoseconds>(stop - start).count();
         /* Validate checksum. */
-        std::cout << "GENE Checksum: " << result << std::endl;
         assert(result == checksum);
         OUTPUT(dataset->size(), toString(dataset->distribution()), "poc", workload->size(), "GENE", 3, 0, i, time);
     }

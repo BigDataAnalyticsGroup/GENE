@@ -31,6 +31,10 @@ int main(int argc, char* argv[]) {
         Dataset<key_type, key_type> * data = Dataset<key_type, key_type>::Create_Books(size);
         data->toFile(out_file);
         delete(data);
+    } else if (strcmp(argv[1], "osm") == 0) {
+        Dataset<key_type, key_type> * data = Dataset<key_type, key_type>::Create_Osm(size);
+        data->toFile(out_file);
+        delete(data);
     } else {
         err(EXIT_FAILURE, "Wrong dataset provided!");
     }

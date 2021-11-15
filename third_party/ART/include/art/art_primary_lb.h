@@ -23,7 +23,7 @@ class ARTPrimaryLB {
  public:
   ~ARTPrimaryLB() { destructTree(tree_); }
 
-  uint64_t Build(const std::vector<std::pair<uint64_t, uint64_t>> &data) {
+  void Build(const std::vector<std::pair<uint64_t, uint64_t>> &data) {
     allocated_byte_count = 0;
     data_ = &data;
     data_size_ = data.size();

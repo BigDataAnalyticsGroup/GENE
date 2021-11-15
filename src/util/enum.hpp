@@ -54,7 +54,7 @@ inline std::string toString(PartitionType ptype) {
 }
 
 //enum Distribution { uniform, normal, zipf, wiki, exponential, books };
-enum Distribution { uniform_dense, uniform_sparse, wiki, books };
+enum Distribution { uniform_dense, uniform_sparse, wiki, books, osm };
 
 inline std::string toString(const Distribution d) {
     switch(d) {
@@ -66,6 +66,8 @@ inline std::string toString(const Distribution d) {
         return "wiki";
     case Distribution::books:
         return "books";
+    case Distribution::osm:
+        return "osm";
     default:
         throw std::invalid_argument("Unsupported distribution.");
     }
@@ -80,6 +82,8 @@ inline Distribution distributionTypeFromString(const std::string& s) {
         return Distribution::wiki;
     if (s == "books")
         return Distribution::books;
+    if (s == "osm")
+        return Distribution::osm;
     else
         throw std::invalid_argument("Unsupported distribution.");
 }
