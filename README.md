@@ -3,59 +3,82 @@
 This repository contains code used for our VLDB paper ["The next 50 Years in Database Indexing or: The Case for Automatically Generated Index Structures"](https://arxiv.org/abs/2009.10669) (Pre-print).
 
 ## Download & Prerequisites
+To use this code, we recommend to clone the repository using `git`.  You should use the `--recurse-submodules` flag in
+your `git clone` command to automatically download the submodules while cloning the repository.
+```sh
+git clone --recurse-submodules git@github.com:BigDataAnalyticsGroup/GENE.git
+```
 
-To use this code, simply clone the repository using git.
-As we use submodules to include code for the [TLX-tree](https://github.com/tlx/tlx), a [Robin-Hood-map](https://github.com/Tessil/robin-map) and others.
-You should use the `--recurse-submodules` flag in your `git clone` command to automatically download the submodules while cloning our repository.
+The execution and visualization of experiments is based on the following tools:
+* C++ compiler supporting C++17
+* `bash>=4`
+* `cmake>=3.1`
+* `Python>=3.5`
+* `md5sum`
+* `wget`
+* `zstd`
+* `graphviz` (optional)
 
-To automate the execution of experiments and to plot the results, we used scripts based on Python 3 and common tools such as jupyter notebooks and libraries such as matplotlib.
-To use the available scripts, you will therefore need to install Python 3 and the necessary packages which are all available via Python's package manager pip.
+To install the required Python modules, you can use Python's package installer `pip` in combination with the
+`requirements.txt`.
+```sh
+pip install -r requirements.txt
+```
 
-## Building
+To download the data required by the experiments, run the following shell script **from the root folder** of the project.
+```sh
+./data/download.sh
+```
 
-We us the [Ninja build system](https://ninja-build.org) to automate code generation in our project.
-After installing ninja and cmake on your local machine, you should create folders to store the binary targets in.
-We recommend a folder structure such as "build/debug" and "build/release" to receive a single folder containing all binary targets, but separated by their build type.
-After entering the folder for your binary targets, simply execute the following command:
-`cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug path/to/repository/root/folder` (for the debug build, substiture `Debug` by `Release` for a release build)
-If you want to specify a compiler of your choice, you can do so by adding the flags `DCMAKE_C_COMPILER=path/to/c/compiler` or `DCMAKE_CXX_COMPILER=path/to/c++/compiler`.
-We recommend using [LLVM's clang compiler family](https://clang.llvm.org).
-To finally build the code, simply execute `ninja` in the corresponding `build/debug` or `build/release` folder.
-Alternatively, you can also specify which folder to build by specifying the corresponding flag: `ninja -C path/to/folder` will build the corresponding folder given by the path.
+## Build
+Our build system is based on `cmake`.  See the following instructions for an example build process in `release` mode.
+
+**NOTE:** The following example requires the execution from the root folder. In addition, reproducing our experimental
+results with the provided scripts requires exactly this folder structure.
+```sh
+mkdir -p build/release
+cd build/release
+cmake -DCMAKE_BUILD_TYPE=Release ../..
+make
+cd ../..
+```
 
 ## Executing Genetic Searches
+After executing the build instructions, the generated binaries are located in `./build/release/bin/`.  The executable
+for the genetic search is called `main`. It offers a multitude of different parameters to specify nearly all important
+hyperparameters and inputs. Calling the executable with the `-h` or `--help` flag will display all available options
+With the default settings, the executable will run a minimal example with 100 keys and 10 generations, which allows to
+test if everything works as expected.
+```sh
+./build/release/bin/main
+```
 
-After building the 
-The main executable of our repository is the so called `main_genetic_general` and should be available under `build/release/bin` (assuming the default folder structure).
-It offers a multitude of different parameters to specify nearly all important hyperparameters and inputs.
-Calling the executable with the `-h` or `--help` flag will display all available options with a short description.
-With the default settings, the executable will run a minimal example with a small amount of keys and generations which allows to test if everything works as expected.
+## Experiments
+In the `./experiments/` folder, we provide scripts to reproduce the experimental results form our paper. In particular,
+we provide the following experiments.
 
-## Reproducing Experiments
+* `hyperparameter-tuning`: Section 6.1 "Hyperparameter Tuning", computes the best hyperparameters for our genetic
+  search.
+* `rediscover-baselines`: Section 6.2 "Rediscover Suitable Baseline Indexes", demonstrates that our genetic algorithm is
+  capable of reproducing the performance of various basline indexes.
+* `optimized-vs-heuristic`: Section 6.3 "Optimized vs Heuristic Indexes", compares the performance of GENE with
+  representatives of different prevalent heuristic index types.
 
-In the experiments folder, we offer different Python scripts to reproduce the experiments shown in our paper.
-Note however that the paths in these scripts assume our recommended folder structure, especially the existence of a `build/release` folder containing the executable compiled in release mode.
-If you used a different build system or a different folder structure, you might have to adapt the corresponding paths in the scripts before you can execute them.
+To run the different experiments, navigate to the corresponding folder and execute the Python
+`run_experiment.py` or Shell `run_experiment.sh` script inside the respective folder. For example, to run the
+hyperparameter search:
+```sh
+cd experiments/hyperparameter-tuning/
+python3 run_experiment.py
+```
+Depending on the specific experiment, the script generates the following folders:
+* `data`: contains the underlying dataset files
+* `workload`: contains the underlying workload files
+* `results`: contains the corresponding result files in `csv` and/or `dot` format
 
-The `experiments/hyperparameter-tuning` folder contains a script to conduct the hyperparameter search as described in Section 6.1 of our paper.
-The `experiments/rediscover-baselines` folder contains the script to reproduce the experiment "Rediscover Suitable Baseline Indexes" as described in Section 6.2 of our paper.
-The `experiments/optimized-vs-heuristic` folder contains a shell script to reproduce the experiment "Optimized vs.
-Heuristic Indexes" as described in Section 6.3 of our paper. [NOTE: TOOD]
-
-All these scripts will produce several outputs by default:
-1) A CSV-file containing the results achieved in each generation of the genetic algorithm. The exact names of these files depend on the experiment and are specified in the corresponding script as `resultFile`.
-2) A CSV-file containing a textual description of the best individuals found during the search process. The exact names of these files again depend on the concrete experiment and consist of the name stored in the `resultFile` filed extended by the suffix `perLevel`.
-Note: We only store this textual representation once per individual found and do not repeat it several times if the corresponding individual remains the best one over multiple generations of the search.
-You can however join the two CSV-files on the ID of the individual if you need information about the best individual in a specific generation.
-3) Graphviz Dot-files containing a visual representation of the best individuals found during search. 
-Each individual is stored exactly once, namely in the first generation it appeared as best performing individual.
-The file names have always the form `bestIndividualGenerationX.dot` with `X` being the generation this individual first appeared.
-Depending on the concrete experiment, the file names might be prefixed to distinguish different runs performed by the same Python script.
-You can again match that information with the CSV files by scanning the CSV-file for the first generation a specific individual appeared as the best performing one.
-To visualize the dot files, you first need to install graphviz on your local machine.
-You can then create a PDF-file containing the visualization using the following command: `dot -Tpdf path/to/dot/file -o /path/to/pdf/file`.
-
-To create the visualizations of the different experiments (e.g. Figure 6), we then used simple jupyter notebooks and the Python matplotlib library.
-To read the CSV-files, we relied on the pandas and numpy libraries.
-All of these libraries were freely available via Python's package manager pip at the time of writing.
-
+To visualize the results, execute the accompanying `visualization.py` script (except for the `hyperparameter-tuning`
+experiment). This will produce `pdf` files containing the plots as shown in the paper.
+To export the dot files using `graphviz` as `pdf`, execute the following command:
+```sh
+dot -Tpdf path/to/dot/file -o /path/to/pdf/file
+```
