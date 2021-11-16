@@ -73,7 +73,7 @@ python3 run_experiment.py
 ```
 Depending on the specific experiment, the script generates the following folders:
 * `data`: contains the underlying dataset files
-* `workload`: contains the underlying workload files
+* `workloads`: contains the underlying workload files
 * `results`: contains the corresponding result files in `csv` and/or `dot` format
 
 To visualize the results, execute the accompanying `visualization.py` script (except for the `hyperparameter-tuning`
