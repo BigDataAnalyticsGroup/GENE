@@ -19,7 +19,7 @@ OUTPUT="${EXPERIMENTS_DIR}/results/optimized_vs_heuristic.out"
 PROGRAM="${RELEASE_BUILD}/bin/optimized_vs_heuristic"
 
 # Compile project in release mode
-ninja -C $RELEASE_BUILD
+make -C $RELEASE_BUILD
 
 
 DATASETS=("uni-dense" "osm" "books")
