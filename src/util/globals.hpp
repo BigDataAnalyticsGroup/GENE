@@ -31,6 +31,7 @@ struct Configuration
     bool normal;
     bool printFinalPopulation;
     bool train_test_split;
+    bool random_layouts;
 
     size_t partition_capacity_inner;
     size_t partition_capacity_leaf;

@@ -25,7 +25,8 @@ process.check_returncode()
 datasetFileUniDense = "data/uni-dense_100000.data"
 datasetFileBooks = "data/books_100000.data"
 datasetFilesScalingBooks = ["data/books_1000000.data",
-                            "data/books_10000000.data"]
+                            "data/books_10000000.data",
+                            "data/books_100000000.data"]
 scalingStepsize = 1
 
 workloadFileBtreeUniDense = "workloads/range_uni-dense_100000_10000_0.000000_0.010000.wkl"
@@ -38,15 +39,15 @@ workloadFileHashtableBooks = "workloads/point_books_100000_10000_1.000000_0.0100
 workloadFileMixBooks = "workloads/mix_books_100000_10000_0.800000_0.010000.wkl"
 workloadFilesBooks = [workloadFileBtreeBooks,
                       workloadFileHashtableBooks, workloadFileMixBooks]
-workloadPrefixes = ["btree", "hashtable", "mix"]
+workloadPrefixes = ["range", "point", "mix"]
 
-resultFileBtreeUniDense = "results/uni-dense_btree_100000.csv"
-resultFileHashtableUniDense = "results/uni-dense_hashtable_100000.csv"
+resultFileBtreeUniDense = "results/uni-dense_range_100000.csv"
+resultFileHashtableUniDense = "results/uni-dense_point_100000.csv"
 resultFileMixUniDense = "results/uni-dense_mix_100000.csv"
 resultFilesUniDense = [resultFileBtreeUniDense,
                        resultFileHashtableUniDense, resultFileMixUniDense]
-resultFileBtreeBooks = "results/books_btree_100000.csv"
-resultFileHashtableBooks = "results/books_hashtable_100000.csv"
+resultFileBtreeBooks = "results/books_range_100000.csv"
+resultFileHashtableBooks = "results/books_point_100000.csv"
 resultFileMixBooks = "results/books_mix_100000.csv"
 resultFilesBooks = [resultFileBtreeBooks,
                     resultFileHashtableBooks, resultFileMixBooks]
@@ -77,6 +78,9 @@ process = sp.run([RELEASE_BUILD_ROOT + pathToDataGeneration, "books",
 process.check_returncode()
 process = sp.run([RELEASE_BUILD_ROOT + pathToDataGeneration, "books",
                   "10000000", EXPERIMENT_FOLDER + datasetFilesScalingBooks[1]])
+process.check_returncode()
+process = sp.run([RELEASE_BUILD_ROOT + pathToDataGeneration, "books",
+                  "100000000", EXPERIMENT_FOLDER + datasetFilesScalingBooks[2]])
 process.check_returncode()
 process = sp.run([RELEASE_BUILD_ROOT + pathToWorkloadGeneration, EXPERIMENT_FOLDER + datasetFileBooks,
                   "10000", "0", "0.01", EXPERIMENT_FOLDER + workloadFileBtreeBooks])
@@ -128,6 +132,7 @@ minimalOutput = True
 tracing = False
 trainTestSplit = False
 chainMutationLength = 0
+randomLayout = True
 
 # Set baseline parameters
 btree_fanout = 10
@@ -236,6 +241,8 @@ for i in [0, 1, 2]:
         arguments.append("--tracing")
     if (not trainTestSplit):
         arguments.append("--disableTrainTestSplit")
+    if (randomLayout):
+        arguments.append("--randomLayout")
 
     print("\nExecuting genetic algorithm for workload",
           i, "\n")
@@ -343,6 +350,8 @@ for i in [0, 1, 2]:
         arguments.append("--tracing")
     if (not trainTestSplit):
         arguments.append("--disableTrainTestSplit")
+    if (randomLayout):
+        arguments.append("--randomLayout")
 
     print("\nExecuting genetic algorithm for workload",
           i, "\n")

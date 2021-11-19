@@ -200,6 +200,7 @@ int main(int argc, char* argv[]) {
         ("scalingDatasets", "datasets used for upscaling", cxxopts::value<std::vector<std::string>>())
         ("scalingWorkloads", "workloads used for upscaling", cxxopts::value<std::vector<std::string>>())
         ("scalingStepsize", "apply upscaling every scalingStepsize generations", cxxopts::value<unsigned int>()->default_value("0"))
+        ("randomLayout", "initialize the population with random data layouts and search methods", cxxopts::value<bool>()->default_value("false"))
         ("h,help", "Usage")
     ;
 
@@ -273,6 +274,8 @@ int main(int argc, char* argv[]) {
     Configuration::Get().searchPriorities["ExponentialSearch"] = result["priorityExponential"].as<double>();
     Configuration::Get().searchPriorities["LinearRegressionSearch"] = result["priorityLinearRegression"].as<double>();
 
+    Configuration::Get().random_layouts = result["randomLayout"].as<bool>();
+
     if (result.count("scalingDatasets")) {
         Configuration::Get().scalingDatasets = result["scalingDatasets"].as<std::vector<std::string>>();
     } else {
@@ -293,8 +296,6 @@ int main(int argc, char* argv[]) {
     // a distribution can either be sparse or normal, not both at the same time
     if (Configuration::Get().sparse && Configuration::Get().normal)
     throw std::invalid_argument("Sparse and normal option can not be combined");
-
-    std::cout << Configuration::Get().scalingDatasets.size() << std::endl;
 
     // print the settings for this execution
     printSettings();

@@ -75,9 +75,16 @@ class FullHorizontalPartitionGenerator : public Generator<Key, Value> {
             printProgress(0);
             // loop until all individuals have been created
             for(unsigned int i=0; i<num; i++) {
-                // bulkload a HorizontalPartition,
-                // i.e. a B-tree like structure with SoA data layout
-                HorizontalPartition<Key, Value>* hp = bulkload_soa_tree<Key, Value>(dataset->begin(), dataset->end(), partition_capacity_leaf, entry_capacity_leaf, partition_capacity_inner, entry_capacity_inner, loadFactorEntriesLeaves, loadFactorPartitionsInner);
+                // bulkload a HorizontalPartition
+                HorizontalPartition<Key, Value>* hp;
+                if (Configuration::Get().random_layouts) {
+                    // as B-tree like structure with random data layout and random search methods
+                    hp = bulkload_random_tree<Key, Value>(dataset->begin(), dataset->end(), partition_capacity_leaf, entry_capacity_leaf, partition_capacity_inner, entry_capacity_inner, loadFactorEntriesLeaves, loadFactorPartitionsInner);
+                } else {
+                    // as B-tree like structure with SoA data layout and binary search
+                    hp = bulkload_soa_tree<Key, Value>(dataset->begin(), dataset->end(), partition_capacity_leaf, entry_capacity_leaf, partition_capacity_inner, entry_capacity_inner, loadFactorEntriesLeaves, loadFactorPartitionsInner);
+                }
+
                 // initialize an individual and measure its fitness
                 HorizontalPartitionIndividual<Key, Value>* ind = new HorizontalPartitionIndividual<Key, Value>(hp,
                                                                         this->workload,
