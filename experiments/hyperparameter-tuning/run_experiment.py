@@ -11,7 +11,7 @@ import os
 pathToProgram = "../../build/release/bin/main_grid_search"
 
 # Build in release mode
-process = sp.run(["ninja",  "-C", "../../build/release/"])
+process = sp.run(["make",  "-C", "../../build/release/"])
 process.check_returncode()
 
 Path("./results").mkdir(parents=True, exist_ok=True)

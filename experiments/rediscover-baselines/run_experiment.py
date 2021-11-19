@@ -18,7 +18,7 @@ baselinePrograms = [pathToBtreeBaseline,
                     pathToHashtableBaseline, pathToMixBaseline]
 
 # Build in release mode
-process = sp.run(["ninja",  "-C", "../../build/release/"])
+process = sp.run(["make",  "-C", "../../build/release/"])
 process.check_returncode()
 
 # dataset, workload & result files
