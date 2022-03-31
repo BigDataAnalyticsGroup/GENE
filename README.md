@@ -1,6 +1,6 @@
 # GENE
 
-This repository contains code used for our VLDB paper ["The next 50 Years in Database Indexing or: The Case for Automatically Generated Index Structures"](https://arxiv.org/abs/2009.10669) (Pre-print).
+This repository contains code used for our PVLDB paper ["The next 50 Years in Database Indexing or: The Case for Automatically Generated Index Structures"](https://bigdata.uni-saarland.de/publications/p527-dittrich.pdf).
 
 ## Download & Prerequisites
 To use this code, we recommend to clone the repository using `git`.  You should use the `--recurse-submodules` flag in
